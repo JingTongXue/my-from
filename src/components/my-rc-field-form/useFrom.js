@@ -9,6 +9,7 @@ class FormStore {
     this.callbacks = {};
   }
 
+  // 用来塞一些回调函数
   setCallbacks = (callbacks) => {
     this.callbacks = { ...callbacks, ...this.callbacks };
   }
@@ -51,6 +52,7 @@ class FormStore {
     // console.log("this.store:    ",this.store);
 
     // 2. update Field
+    // 找到更新的是哪个子项,单独拿出来更新即可
     this.fieldEntities.forEach(entity => {
       Object.keys(newStore).forEach(k => {
         if(k === entity.props.name) {
@@ -79,11 +81,8 @@ class FormStore {
 
   // 提交
   submit = () => {
-
     let err = this.validate();
-
     const { onFinish, onFinishFailed } = this.callbacks;
-
     if(err.length === 0 ) {
       // 校验通过
       onFinish(this.getFieldsValue());

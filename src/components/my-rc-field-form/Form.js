@@ -10,6 +10,7 @@ export default function Form (
 
   React.useImperativeHandle(ref, () => formInstance);
 
+  // 塞回调:onFinish,onFinishFailed
   formInstance.setCallbacks({
     onFinish,
     onFinishFailed
