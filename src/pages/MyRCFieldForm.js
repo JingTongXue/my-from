@@ -20,7 +20,7 @@ export default function MyRCFieldForm(props) {
 
   useEffect(() => {
     console.log("form", form); //sy-log
-    // form.setFieldsValue({ username: "default" });
+    form.setFieldsValue({ username: "default" });
   }, []);
 
   return (
@@ -42,8 +42,8 @@ export default function MyRCFieldForm(props) {
 // export default class MyRCFieldForm extends Component {
 //   formRef = React.createRef();
 //   componentDidMount() {
-//     console.log("form", this.formRef.current); //sy-log
-//     this.formRef.current.setFieldsValue({ username: "default" });
+//     // console.log("form", this.formRef.current); //sy-log
+//     // this.formRef.current.setFieldsValue({ username: "default" });
 //   }
 
 //   onFinish = (val) => {

@@ -5,7 +5,7 @@ class FormStore {
   constructor() {
     this.store = {}; // 状态值  name: value
     this.fieldEntities = [];
-    // 
+    // 记录回调
     this.callbacks = {};
   }
 
@@ -42,13 +42,13 @@ class FormStore {
 
   // set
 // password:   123
-  setFieldValue = (newStore) => {
+  setFieldsValue = (newStore) => {
     // 1. update store
     this.store = {
       ...this.store,
       ...newStore
     }
-    console.log("this.store:    ",this.store);
+    // console.log("this.store:    ",this.store);
 
     // 2. update Field
     this.fieldEntities.forEach(entity => {
@@ -65,7 +65,15 @@ class FormStore {
     // todo 校验
 
     // 简化校验
-
+    const store = this.getFieldsValue();
+    const fieldEntities = this.fieldEntities;
+    fieldEntities.forEach((entity) => {
+      let {name, rules} = entity.props;
+      let value = this.getFieldValue(name);
+      if (rules[0] && (value == null || value.replace(/\s*/, "") === "")) {
+        err.push({name, err: rules[0].message});
+      }
+    });
     return err;
   }
 
@@ -78,10 +86,10 @@ class FormStore {
 
     if(err.length === 0 ) {
       // 校验通过
-      onFinish(this.getFieldsValue);
+      onFinish(this.getFieldsValue());
     } else {
       // 校验未通过
-      onFinishFailed(err,this.getFieldsValue);
+      onFinishFailed(err,this.getFieldsValue());
     }
 
   }
@@ -90,7 +98,7 @@ class FormStore {
     return {
       getFieldsValue: this.getFieldsValue,
       getFieldValue: this.getFieldValue,
-      setFieldValue: this.setFieldValue,
+      setFieldsValue: this.setFieldsValue,
       registerFieldEntities: this.registerFieldEntities,
       submit: this.submit,
       setCallbacks: this.setCallbacks,
@@ -102,13 +110,17 @@ class FormStore {
 
 
 
-export default function useForm() {
+export default function useForm(form) {
   // 存值， 在组建卸载之前指向的都是同一个值
   const formRef = useRef();
 
   if(!formRef.current) {
-    const fromStore = new FormStore();
-    formRef.current = fromStore.getForm();
+    if(form) {
+      formRef.current = form;
+    } else {
+      const fromStore = new FormStore();
+      formRef.current = fromStore.getForm();
+    }
   }
 
 
